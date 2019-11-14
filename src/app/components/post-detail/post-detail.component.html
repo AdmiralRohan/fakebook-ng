@@ -1,0 +1,222 @@
+<!-- Start: Delete post alert -->
+<ngb-alert @fadeInOut type="danger" dismissable="true" *ngIf="isPostBeingDeleted" (close)="isPostBeingDeleted = false">
+  <span>
+    Are you sure you want to delete this post?
+    <a appPreventDefault href="#" class="alert-link delete-post-yes" (click)="deletePostActions(true)">Yes</a>&nbsp;or
+    <a appPreventDefault href="#" class="alert-link delete-post-no" (click)="deletePostActions(false)">No</a>
+  </span>
+</ngb-alert>
+<!-- End: Delete post alert -->
+
+<!-- Start: After post deleted alert -->
+<ngb-alert @fadeInOut type="primary" dismissable="true" *ngIf="afterPostDeletedFlag"
+  (close)="afterPostDeletedFlag = false">
+  <span>
+    Your post has been deleted.
+  </span>
+</ngb-alert>
+<!-- End: After post deleted alert -->
+
+<div @fadeInOut *ngIf="isPostDeleted" class="card my-2" id="post-{{ post.id }}">
+  <div class="card-body">
+    Post has been deleted.
+  </div>
+</div>
+
+<!-- Start: Post component -->
+<div *ngIf="!isPostDeleted" class="card my-2" id="post-{{ post.id }}">
+  <!-- Start: Post header -->
+  <div class="card-header">
+    <!-- Start: Edit and Delete post buttons -->
+    <div @fadeInOut *ngIf="loggedInUserId === post.owner.id && !isPostBeingEdited && !isPostBeingDeleted"
+      class="float-right post-crud-options">
+      <div ngbDropdown placement="bottom-right" class="d-inline-block">
+        <button ngbDropdownToggle class="btn btn-secondary btn-sm" type="button" id="edit-delete-Button"
+          aria-haspopup="true" aria-expanded="false"></button>
+
+        <div ngbDropdownMenu aria-labelledby="edit-delete-button">
+          <a appPreventDefault class="dropdown-item edit-post" href="#" (click)="editPost()">Edit Post</a>
+          <a appPreventDefault class="dropdown-item delete-post" href="#" (click)="deletePost()">Delete Post</a>
+        </div>
+      </div>
+    </div>
+    <!-- End: Edit and Delete post buttons -->
+
+    <div class="font-weight-bold">
+      <a routerLink="/profile/{{ post.owner.id }}">{{ post.owner.name }}</a>
+    </div>
+    <div><a routerLink="/post/{{ post.id }}"><span class="text-secondary">{{ post.time | date: 'short' }}</span></a>
+    </div>
+  </div>
+  <!-- End: Post header -->
+
+  <!-- Start: Post body -->
+  <div class="card-body">
+    <!-- Start: Edit post input -->
+    <div @fadeInOut *ngIf="isPostBeingEdited" class="form-group">
+      <!-- Tooltip shown for blank content -->
+      <ng-template #blankTooltipContent>
+        Cannot submit blank post.
+      </ng-template>
+
+      <textarea appAutoAdjustTextarea #editPostInput placement="bottom"
+        [ngbTooltip]="isBlankInputTooltipShown ? blankTooltipContent : ''" type="text"
+        class="form-control form-control-sm edit-post-input overflow-hidden"
+        [class.is-invalid]="postEdit.invalid && (postEdit.dirty || postEdit.touched)" rows="3"
+        placeholder="Write something here..." name="postContent" [(ngModel)]="postContent" [innerHTML]="postContent"
+        required (keydown)="editPostActions($event)" (focus)="isFocusOnEditInput = true"
+        (focusout)="isFocusOnEditInput = false" #postEdit="ngModel"></textarea>
+
+      <div *ngIf="postEdit.invalid && (postEdit.dirty || postEdit.touched)" class="invalid-feedback">
+        <div *ngIf="postEdit.hasError('required')">
+          Cannot submit empty post.
+        </div>
+      </div>
+
+      <div class="mt-1">
+        <span *ngIf="isFocusOnEditInput" class="edit-post-guide">Press Esc to </span>
+        <a appPreventDefault href="#" class="edit-post-input-cancel" (click)="cancelEditPost()">cancel</a>
+      </div>
+    </div>
+    <!-- End: Edit post input -->
+
+    <!-- Start: Post content -->
+    <div @fadeInOut *ngIf="!isPostBeingEdited" class="post-content">
+      <div class="card-text line-breaker" [innerHTML]="post.content"></div>
+
+      <!-- Original post when the post is shared -->
+      <div *ngIf="post.isSharedPost && post.originalPost" class="card my-3">
+        <div class="card-header">
+          <div class="font-weight-bold">
+            <a routerLink="/profile/{{ post.originalPost.owner.id }}">{{ post.originalPost.owner.name }}</a>
+          </div>
+          <div>
+            <a routerLink="/post/{{ post.originalPost.id }}">
+              <span class="text-secondary">{{ post.originalPost.time | date: 'short' }}</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="card-body">
+          <div class="card-text line-breaker" [innerHTML]="post.originalPost.content"></div>
+        </div>
+      </div>
+
+      <!-- Original post is deleted -->
+      <div *ngIf="post.isSharedPost && !post.originalPost" class="card my-3">
+        <div class="card-header font-weight-bold">
+          The content isn't available right now
+        </div>
+
+        <div class="card-body">
+          <div class="card-text">When this happens, this is because the owner only shared it with a small group of
+            people, changed who can see it or it's been deleted.</div>
+        </div>
+      </div>
+    </div>
+    <!-- End: Post Content -->
+
+    <!-- Start: No of likes and comments -->
+    <div class="row mt-2">
+      <!-- Start: No of likes -->
+      <div class="col-6 text-left">
+        <!-- Dynamic tooltip template -->
+        <ng-template #postTooltipContent>
+          <ng-container *ngFor="let likedUser of postLikedByUsers">{{ likedUser.name }}<br></ng-container>
+        </ng-template>
+
+        <!-- Button -->
+        <a appPreventDefault href="#" class="post-like-count" placement="bottom"
+          [ngbTooltip]="postLikedByUsers.length ? postTooltipContent : ''" (click)="openLikedUsersModal()">
+          <span class="text-secondary">
+            {{ noOfUsersLikedPost }}
+          </span>
+        </a>
+      </div>
+
+      <!-- No of comments -->
+      <div class="col-6 text-right">
+        <a appPreventDefault href="#" class="comment-count">
+          <span class="text-secondary">
+            {{ noOfComments }}
+          </span>
+        </a>
+      </div>
+    </div>
+    <!-- End: No of likes and comments -->
+
+    <hr>
+    <!-- Start: Post action buttons -->
+    <div class="row">
+      <!-- Start: Like button -->
+      <div class="col-12 col-sm-4 text-center">
+        <a appPreventDefault href="#" [ngClass]="isPostLikedByUser ? 'btn-primary' : 'btn-outline-primary'"
+          [class.disabled]="isButtonLoading" class="btn btn-sm like-post" (click)="likePost()">
+          <!-- Start: Loader -->
+          <span *ngIf="isButtonLoading" class="spinner-border spinner-border-sm" role="status"
+            aria-hidden="true"></span>
+          <span *ngIf="isButtonLoading" class="sr-only">Loading...</span>
+          <!-- End: Loader -->
+          <span> Like <i class="fas fa-thumbs-up"></i></span>
+        </a>
+      </div>
+      <div class="w-100 my-1 d-sm-none"></div>
+      <!-- End: Like button -->
+
+      <!-- Start: Comment button -->
+      <div class="col-12 col-sm-4 text-center">
+        <a appPreventDefault href="#" class="btn btn-sm btn-outline-primary comment-post" id="comment-link"
+          (click)="commentTextareaFocus()">
+          <span>Comment <i class="fas fa-comments"></i></span>
+        </a>
+      </div>
+      <div class="w-100 my-1 d-sm-none"></div>
+      <!-- End: Comment button -->
+
+      <!-- Start: Share button -->
+      <div class="col-12 col-sm-4 text-center">
+        <a appPreventDefault href="#" class="btn btn-sm btn-outline-primary share-post" id="share-button"
+          (click)="sharePost()">
+          <span>Share <i class="fas fa-share"></i></span>
+        </a>
+      </div>
+      <!-- End: Share button -->
+    </div>
+    <!-- End: Post action buttons -->
+
+    <hr>
+    <div class="my-1">
+      <!-- Comment input -->
+      <form #commentForm="ngForm">
+        <div class="form-group">
+          <!-- Tooltip shown for blank content -->
+          <ng-template #blankTooltipContent>
+            Cannot submit blank comment.
+          </ng-template>
+
+          <textarea appAutoAdjustTextarea #comment placement="bottom"
+            [ngbTooltip]="isBlankInputTooltipShown ? blankTooltipContent : ''" type="text"
+            class="form-control form-control-sm overflow-hidden comment-input" rows="1" placeholder="Write a comment..."
+            [class.is-invalid]="content.invalid && (content.dirty || content.touched)" name="commentInput"
+            [(ngModel)]="commentInput" [innerHTML]="commentInput" required
+            (keydown)="commentSubmit($event, commentForm)" #content="ngModel"></textarea>
+
+          <div *ngIf="content.invalid && (content.dirty || content.touched)" class="invalid-feedback">
+            <div *ngIf="content.hasError('required')">
+              Cannot submit empty comment.
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <!-- Start: Comments -->
+    <div class="comments" *ngFor="let comment of comments">
+      <app-comment-detail [loggedInUserId]="loggedInUserId" [comment]="comment" (deletedId)="onDeletedComment($event)">
+      </app-comment-detail>
+    </div>
+    <!-- End: Comments -->
+  </div>
+  <!-- End: Post body -->
+</div>
+<!-- End: Post component -->

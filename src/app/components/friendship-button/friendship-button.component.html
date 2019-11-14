@@ -1,0 +1,50 @@
+<span *ngIf="friendshipStatusCode === 0">
+</span>
+
+<span *ngIf="friendshipStatusCode === 1">
+  <a appPreventDefault href="#" class="btn btn-sm btn-primary" (click)="addFriend()">
+    <span *ngIf="isButtonLoading" [class.disabled]="isButtonLoading" class="spinner-border spinner-border-sm"
+      role="status" aria-hidden="true"></span>
+    <span *ngIf="isButtonLoading" class="sr-only">Loading...</span>
+    <span> Add Friend <i class="fas fa-user-plus"></i></span></a>
+</span>
+
+<span ngbDropdown placement="bottom-right" *ngIf="friendshipStatusCode === 2">
+  <a appPreventDefault ngbDropdownToggle [class.disabled]="isButtonLoading" class="btn btn-sm btn-success" href="#"
+    aria-haspopup="true" aria-expanded="false">
+    <span *ngIf="isButtonLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+    <span *ngIf="isButtonLoading" class="sr-only">Loading...</span>
+    <span> Friend <i class="fas fa-user-friends"></i></span>
+  </a>
+
+  <div ngbDropdownMenu>
+    <a appPreventDefault class="dropdown-item" href="#" (click)="unfriend()">Unfriend</a>
+  </div>
+</span>
+
+<span ngbDropdown placement="bottom-right" *ngIf="friendshipStatusCode === 3">
+  <a appPreventDefault ngbDropdownToggle [class.disabled]="isButtonLoading" class="btn btn-sm btn-secondary" href="#"
+    aria-haspopup="true" aria-expanded="false">
+    <span *ngIf="isButtonLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+    <span *ngIf="isButtonLoading" class="sr-only">Loading...</span>
+    <span> Friend Request Sent <i class="fas fa-user-friends"></i></span>
+  </a>
+
+  <div ngbDropdownMenu>
+    <a appPreventDefault class="dropdown-item" href="#" (click)="cancelRequest()">Cancel Request</a>
+  </div>
+</span>
+
+<span ngbDropdown placement="bottom-right" *ngIf="friendshipStatusCode === 4">
+  <a appPreventDefault ngbDropdownToggle [class.disabled]="isButtonLoading" class="btn btn-sm btn-primary" href="#"
+    aria-haspopup="true" aria-expanded="false">
+    <span *ngIf="isButtonLoading" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+    <span *ngIf="isButtonLoading" class="sr-only">Loading...</span>
+    <span> Respond to Friend Request <i class="fas fa-user-friends"></i></span>
+  </a>
+
+  <div ngbDropdownMenu>
+    <a appPreventDefault class="dropdown-item" href="#" (click)="confirmRequest()">Confirm</a>
+    <a appPreventDefault class="dropdown-item" href="#" (click)="deleteRequest()">Delete Request</a>
+  </div>
+</span>

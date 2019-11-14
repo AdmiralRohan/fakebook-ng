@@ -1,0 +1,24 @@
+<div class="card p-3 mb-3">
+  <form #postForm="ngForm">
+    <div class="form-group">
+      <label for="post-content" class="font-weight-bold">Create Post</label>
+
+      <div @fadeInOut *ngIf="afterPostSubmittedFlag" class="card p-3 mb-2">
+        <span class="text-success font-weight-bold">-&nbsp;Post created successfully.</span>
+      </div>
+
+      <textarea appAutoAdjustTextarea class="form-control overflow-hidden" id="post-content" rows="3" name="postContent"
+        [(ngModel)]="postContent" [class.is-invalid]="content.invalid && (content.dirty || content.touched)"
+        placeholder="Write something here..." #content="ngModel" required></textarea>
+
+      <div *ngIf="content.invalid && (content.dirty || content.touched)" class="invalid-feedback">
+        <div *ngIf="content.hasError('required')">
+          Cannot submit empty post.
+        </div>
+      </div>
+    </div>
+
+    <button [disabled]="!postForm.form.valid" type="submit" class="btn btn-primary btn-sm mb-2"
+      (click)="onSubmit(); postForm.reset()">Create New Post</button>
+  </form>
+</div>

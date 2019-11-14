@@ -1,0 +1,52 @@
+<div *ngIf="!friends.length" class="card p-3 my-2">
+  <div class="card-body">
+    <span>It looks like you don't have any friend at this moment.</span>
+  </div>
+</div>
+<div *ngIf="friends.length > 0" class="card p-3 my-2">
+  <div class="card-title font-weight-bold text-center">
+    {{ noOfFriendsString }}
+  </div>
+  <hr>
+
+  <div class="card-body">
+    <ng-container *ngFor="let friend of friends">
+      <div class="card-text row">
+        <div class="col-12 col-sm-6 text-left">
+          <div><a routerLink="/profile/{{ friend.id }}">{{ friend.name }}</a></div>
+          <div>
+            <!-- Dynamic tooltip template -->
+            <ng-template #mutualFriendTooltipContent>
+              <ng-container *ngFor="let friend of mutualFriends[friend.id]">{{friend.name}}<br></ng-container>
+            </ng-template>
+
+            <a appPreventDefault href="#" placement="bottom"
+              [ngbTooltip]="mutualFriends[friend.id].length ? mutualFriendTooltipContent : ''"
+              (click)="openMutualFriendsModal(friend.id)">
+              <span class="text-secondary">
+                {{ noOfMutualFriends(friend.id) }}
+              </span>
+            </a>
+          </div>
+        </div>
+        <div class="w-100 my-1 d-sm-none"></div>
+
+        <!-- Action buttons -->
+        <div class="col-12 col-sm-6 text-right">
+          <span class="mr-1">
+            <a routerLink="/message/{{ friend.id }}" class="btn btn-sm btn-info">Message <i
+                class="fas fa-envelope"></i></a>
+          </span>
+          <!-- Send next button to next line for mobile -->
+          <div class="w-100 my-1 d-sm-none"></div>
+
+          <span class="mr-1">
+            <app-friendship-button [profileId]="friend.id" [friendshipStatus]="friend.friendshipStatus">
+            </app-friendship-button>
+          </span>
+        </div>
+      </div>
+      <hr>
+    </ng-container>
+  </div>
+</div>

@@ -1,0 +1,62 @@
+<div class="modal-header">
+  <h5 class="modal-title font-weight-bold text-center">
+    Share on Your Timeline
+  </h5>
+  <button type="button" class="close" aria-label="Close" (click)="activeModal.dismiss('Cross click')">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<div class="modal-body">
+  <div class="form-group">
+    <textarea class="form-control" rows="3" name="postContent" [(ngModel)]="postContent" [innerHTML]="postContent"
+      placeholder="Say something about this..."></textarea>
+  </div>
+
+  <div class="card my-2">
+    <div *ngIf="!post.isSharedPost && !post.originalPost">
+      <div class="card-header">
+        <div class="font-weight-bold">
+          <a routerLink="/profile/{{ post.owner.id }}">{{ post.owner.name }}</a>
+        </div>
+        <div><span class="text-secondary">{{ post.time | date: 'short' }}</span></div>
+      </div>
+
+      <div class="card-body">
+        <div class="card-text line-breaker" [innerHTML]="post.content"></div>
+      </div>
+    </div>
+
+    <div *ngIf="post.isSharedPost && post.originalPost">
+      <div class="card-header">
+        <div class="font-weight-bold">
+          <a routerLink="/profile/{{ post.originalPost.owner.id }}">{{ post.originalPost.owner.name }}</a>
+        </div>
+        <div><span class="text-secondary">{{ post.originalPost.time | date: 'short' }}</span></div>
+      </div>
+
+      <div class="card-body">
+        <div class="card-text line-breaker" [innerHTML]="post.originalPost.content"></div>
+      </div>
+    </div>
+
+    <div *ngIf="post.isSharedPost && !post.originalPost">
+      <div class="card-header font-weight-bold">
+        The content isn't available right now
+      </div>
+
+      <div class="card-body">
+        <div class="card-text">
+          When this happens, this is because the owner only shared it with a small group of people, changed who can see
+          it
+          or it's been deleted.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-footer">
+  <button type="submit" class="btn btn-primary btn-sm" (click)="sharePost()">Share Post</button>
+  <button type="button" class="btn btn-secondary btn-sm" (click)="activeModal.close('Close click')">Cancel</button>
+</div>

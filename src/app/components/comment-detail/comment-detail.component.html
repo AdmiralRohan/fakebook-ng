@@ -1,0 +1,114 @@
+<!-- Start: Edit comment -->
+<div @fadeInOut *ngIf="isCommentBeingEdited" class="form-group">
+  <!-- Tooltip shown for blank content -->
+  <ng-template #blankTooltipContent>
+    Cannot submit blank comment.
+  </ng-template>
+
+  <textarea appAutoAdjustTextarea #editCommentInput placement="bottom"
+    [ngbTooltip]="isBlankInputTooltipShown ? blankTooltipContent : ''" type="text"
+    class="form-control form-control-sm edit-post-input overflow-hidden"
+    [class.is-invalid]="content.invalid && (content.dirty || content.touched)" rows="1" placeholder="Write a comment..."
+    name="commentContent" [(ngModel)]="commentContent" [innerHTML]="commentContent"
+    (keydown)="editCommentActions($event)" (focus)="isFocusOnEditInput = true" (focusout)="isFocusOnEditInput = false"
+    required #content="ngModel"></textarea>
+
+  <div *ngIf="content.invalid && (content.dirty || content.touched)" class="invalid-feedback">
+    <div *ngIf="content.hasError('required')">
+      Cannot submit empty comment.
+    </div>
+  </div>
+
+  <div class="mt-1">
+    <span class="edit-comment-guide" *ngIf="isFocusOnEditInput">Press Esc to </span>
+    <a appPreventDefault href="#" class="edit-comment-input-cancel" (click)="cancelEditComment()">cancel</a>
+  </div>
+</div>
+<!-- End: Edit comment -->
+
+<!-- Start: Delete comment alert -->
+<ngb-alert @fadeInOut type="danger" dismissable="true" *ngIf="isCommentBeingDeleted"
+  (close)="isCommentBeingDeleted = false">
+  <span>
+    Are you sure you want to delete this comment?
+    <a appPreventDefault href="#" class="alert-link delete-comment-yes"
+      (click)="deleteCommentActions(true)">Yes</a>&nbsp;or
+    <a appPreventDefault href="#" class="alert-link delete-comment-no" (click)="deleteCommentActions(false)">No</a>
+  </span>
+</ngb-alert>
+<!-- End: Delete comment alert -->
+
+<!-- Start: After comment deleted alert -->
+<ngb-alert @fadeInOut type="primary" dismissable="true" *ngIf="afterCommentDeletedFlag"
+  (close)="afterCommentDeletedFlag = false">
+  <span>
+    Your comment has been deleted.
+  </span>
+</ngb-alert>
+<!-- End: After comment deleted alert -->
+
+<!-- Start: Comment component -->
+<div *ngIf="!isCommentBeingEdited" id="comment-{{ comment.id }}" class="comment">
+  <div class="mb-1">
+    <span class="comment-owner font-weight-bold mr-1">
+      <a routerLink="/profile/{{comment.owner.id}}">{{ comment.owner.name }}</a>
+    </span>
+    <span class="comment-content line-breaker my-2" [innerHTML]="comment.content"></span>
+  </div>
+
+  <!-- Start: Comment action buttons -->
+  <div class="comment-actions">
+    <!-- Start: Like button -->
+    <span>
+      <!-- Start: Loader -->
+      <span *ngIf="isButtonLoading" [style.margin-right]="'3px'" class="spinner-border spinner-border-sm" role="status">
+        <span class="sr-only">Loading...</span>
+      </span>
+      <!-- End: Loader -->
+
+      <a appPreventDefault href="#" [style.margin-right]="'3px'" [class.disabled]="isButtonLoading"
+        [ngClass]="isCommentLikedByUser ? 'text-primary' : 'text-secondary'" class="btn btn-link p-0 like-comment"
+        (click)="likeComment()">Like</a>
+    </span>
+    <!-- End: Like button -->
+
+    <!-- Start: No of likes (optional) -->
+    <span>
+      <!-- Start: Dynamic tooltip template -->
+      <ng-template #commentTooltipContent>
+        <ng-container *ngFor="let likedUser of commentLikedByUsers">{{ likedUser.name }}<br></ng-container>
+      </ng-template>
+      <!-- End: Dynamic tooltip template -->
+
+      <span class="badge badge-pill badge-primary comment-like-count" [class.d-none]="commentLikedByUsers.length === 0"
+        placement="bottom" [ngbTooltip]="commentLikedByUsers.length ? commentTooltipContent : ''"
+        (click)="openLikedUsersModal()">
+        {{ commentLikedByUsers.length }}
+      </span>
+    </span>
+    <!-- End: No of likes -->
+
+    <ng-container *ngIf="loggedInUserId === comment.owner.id">
+      <!-- Edit button -->
+      <span>
+        &#8208;
+        <a appPreventDefault href="#" class="btn btn-link text-info p-0 edit-comment" (click)="editComment()">Edit</a>
+      </span>
+
+      <!-- Delete button -->
+      <span>
+        &#8208;
+        <a appPreventDefault href="#" class="btn btn-link text-danger p-0 delete-comment"
+          (click)="deleteComment()">Delete</a>
+      </span>
+    </ng-container>
+
+    <!-- Used to send comment time to next line for smaller screens -->
+    <div class="w-100 my-1 d-sm-none"></div>
+    <!-- Time -->
+    <span class="float-sm-right">{{ comment.time | date: 'short' }}</span>
+  </div>
+  <!-- End: Comment action buttons -->
+</div>
+<!-- End: Comment component -->
+<hr>

@@ -1,0 +1,111 @@
+<main role="main" class="container-fluid">
+  <div id="container" class="mx-auto my-5">
+    <div class="card p-4">
+      <div class="card-title text-center font-weight-bold logo">Fakebook</div>
+      <div class="card-subtitle text-center h6">Register a new account</div>
+      <div class="card-body">
+        <form [formGroup]="registerForm" (ngSubmit)="register()">
+          <div class="form-group">
+            <label for="fname">First Name</label>
+            <input type="text" class="form-control form-control-sm" id="fname" placeholder="Enter first name"
+              formControlName="fname">
+
+            <div
+              *ngIf="registerForm.get('fname').errors && (registerForm.get('fname').dirty || registerForm.get('fname').touched)"
+              class="invalid-feedback">
+              <div *ngIf="registerForm.get('fname').hasError('required')">
+                First name is required.
+              </div>
+
+              <div *ngIf="registerForm.get('fname').hasError('maxlength')">
+                Name must be within {{registerForm.get('fname').errors['maxlength'].requiredLength}} characters long.
+              </div>
+
+              <div *ngIf="registerForm.get('fname').hasError('minlength')">
+                First name must be atleast {{registerForm.get('fname').errors['minlength'].requiredLength}} characters
+                long.
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="fname">Last Name</label>
+            <input type="text" class="form-control form-control-sm" id="lname" placeholder="Enter last name"
+              formControlName="lname">
+
+            <div
+              *ngIf="registerForm.get('lname').errors && (registerForm.get('lname').dirty || registerForm.get('lname').touched)"
+              class="invalid-feedback">
+              <div *ngIf="registerForm.get('lname').hasError('required')">
+                Last name is required.
+              </div>
+
+              <div *ngIf="registerForm.get('lname').hasError('maxlength')">
+                Last name must be within {{registerForm.get('lname').errors['maxlength'].requiredLength}} characters
+                long.
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email address</label>
+            <input type="email" class="form-control form-control-sm" id="email" placeholder="Enter email address"
+              formControlName="email">
+
+            <div
+              *ngIf="registerForm.get('email').errors && (registerForm.get('email').dirty || registerForm.get('email').touched)"
+              class="invalid-feedback">
+              <div *ngIf="registerForm.get('email').hasError('required')">
+                Email address is required.
+              </div>
+
+              <div *ngIf="registerForm.get('email').hasError('maxlength')">
+                Email address must be within {{registerForm.get('email').errors['maxlength'].requiredLength}} characters
+                long.
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" class="form-control form-control-sm" id="password" placeholder="Password"
+              formControlName="password">
+
+            <div
+              *ngIf="registerForm.get('password').errors && (registerForm.get('password').dirty || registerForm.get('password').touched)"
+              class="invalid-feedback">
+              <div *ngIf="registerForm.get('password').hasError('required')">
+                Password is required.
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="confirmpassword">Confirm Password</label>
+            <input type="password" class="form-control form-control-sm" id="confirmpassword"
+              placeholder="Confirm password" formControlName="confirmpassword"
+              [ngClass]="{'is-invalid': registerForm.errors?.passwordMismatch && (registerForm.controls.confirmpassword.dirty || registerForm.controls.confirmpassword.touched), 'is-valid': !registerForm.errors?.passwordMismatch && registerForm.controls.confirmpassword.dirty}">
+
+            <div
+              *ngIf="(registerForm.get('confirmpassword').dirty || registerForm.get('confirmpassword').touched) && registerForm.hasError('passwordMismatch')"
+              class="invalid-feedback">
+              Passwords do not match.
+            </div>
+          </div>
+
+          <button type="submit" [disabled]="registerForm.invalid || formBeingSubmitted" class="btn btn-primary btn-sm">
+            <!-- Start: Loader -->
+            <span *ngIf="formBeingSubmitted" class="spinner-border spinner-border-sm" role="status"
+              aria-hidden="true"></span>
+            <span *ngIf="formBeingSubmitted" class="sr-only">Loading...</span>
+            <span> Submit</span>
+          </button>
+        </form>
+        <br>
+        <div>
+          Already have an account? <a routerLink="/login">Login Here</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

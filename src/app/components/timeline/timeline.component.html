@@ -1,0 +1,15 @@
+<div id="container" class="mx-auto my-3">
+  <div class="text-center font-weight-bold mb-2">{{profileName}}</div>
+
+  <app-create-post-form></app-create-post-form>
+  <div *ngIf="!posts.length; else postsAvailable" class="card p-3 my-2 text-center">
+    It looks like there are no posts available to view at this moment.
+  </div>
+  <ng-template #postsAvailable>
+    <div>
+      <ng-container *ngFor="let post of posts">
+        <app-post-detail [loggedInUserId]="loggedInUserId" [post]="post"></app-post-detail>
+      </ng-container>
+    </div>
+  </ng-template>
+</div>

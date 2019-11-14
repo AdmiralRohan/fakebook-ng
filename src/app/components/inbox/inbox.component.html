@@ -1,0 +1,32 @@
+<div id="container" class="mx-auto my-3">
+  <div *ngIf="!users.length" class="card p-3 my-2">
+    <div class="card-body">
+      <span>It looks like you don't have any messages at this moment.</span>
+    </div>
+  </div>
+  <div *ngIf="users.length" class="card p-3 my-2">
+    <div class="card-title font-weight-bold text-center mb-0">
+      {{ noOfContacts }}
+    </div>
+    <hr>
+
+    <div class="card-body">
+      <ng-container *ngFor="let user of users">
+        <div class="row">
+          <div class="col-8 text-left">
+            <a routerLink="/message/{{ contacts[user].id }}">{{ contacts[user].name }}</a>
+          </div>
+
+          <div class="col-4 text-right">
+            {{ messages[user].time | date: 'short' }}
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12 line-breaker" [innerHTML]="messages[user].content">
+          </div>
+        </div>
+        <hr>
+      </ng-container>
+    </div>
+  </div>
+</div>

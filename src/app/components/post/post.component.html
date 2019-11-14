@@ -1,0 +1,8 @@
+<div id="container" class="mx-auto my-3">
+  <div *ngIf="!post.id; else postsAvailable" class="card p-3 my-2 text-center">
+    It looks like the post hasn't fetched yet from the server.
+  </div>
+  <ng-template #postsAvailable>
+    <app-post-detail [loggedInUserId]="loggedInUserId" [post]="post"></app-post-detail>
+  </ng-template>
+</div>

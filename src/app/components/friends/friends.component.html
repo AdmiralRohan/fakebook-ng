@@ -1,0 +1,29 @@
+<div id="container" class="mx-auto my-3">
+  <div class="text-center font-weight-bold mb-3">{{profileName}}</div>
+
+  <ngb-tabset justify="fill" (tabChange)="onTabChange($event)">
+    <!-- Friends -->
+    <ngb-tab id="friends">
+      <ng-template ngbTabTitle>Friends</ng-template>
+      <ng-template ngbTabContent>
+        <app-friend-detail [friends]="friends" [mutualFriends]="mutualFriends"></app-friend-detail>
+      </ng-template>
+    </ngb-tab>
+
+    <!-- Received friend requests -->
+    <ngb-tab id="received">
+      <ng-template ngbTabTitle>Received Friend Requests</ng-template>
+      <ng-template ngbTabContent>
+        <app-friend-detail [friends]="friends" [mutualFriends]="mutualFriends"></app-friend-detail>
+      </ng-template>
+    </ngb-tab>
+
+    <!-- Sent friend requests -->
+    <ngb-tab id="sent">
+      <ng-template ngbTabTitle>Sent Friend Requests</ng-template>
+      <ng-template ngbTabContent>
+        <app-friend-detail [friends]="friends" [mutualFriends]="mutualFriends"></app-friend-detail>
+      </ng-template>
+    </ngb-tab>
+  </ngb-tabset>
+</div>

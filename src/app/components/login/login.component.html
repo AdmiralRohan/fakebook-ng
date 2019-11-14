@@ -1,0 +1,55 @@
+<main role="main" class="container-fluid">
+  <div id="container" class="mx-auto my-5">
+    <div class="card p-4">
+      <div class="card-title text-center font-weight-bold logo">Fakebook</div>
+      <div class="card-subtitle text-center h6">Login into your account</div>
+      <div class="card-body">
+        <form [formGroup]="loginForm" (ngSubmit)="login()">
+          <div class="form-group">
+            <label for="email">Email address</label>
+            <input type="email" class="form-control form-control-sm" id="email" placeholder="Enter email address"
+              formControlName="email">
+
+            <div
+              *ngIf="loginForm.get('email').errors && (loginForm.get('email').dirty || loginForm.get('email').touched)"
+              class="invalid-feedback">
+              <div *ngIf="loginForm.get('email').hasError('required')">
+                Email address is required.
+              </div>
+              <div *ngIf="loginForm.get('email').hasError('maxlength')">
+                Email address must be within {{loginForm.get('email').errors['maxlength'].requiredLength}} characters
+                long.
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" class="form-control form-control-sm" id="password" placeholder="Enter Password"
+              formControlName="password">
+
+            <div
+              *ngIf="loginForm.get('password').errors && (loginForm.get('password').dirty || loginForm.get('password').touched)"
+              class="invalid-feedback">
+              <div *ngIf="loginForm.get('password').hasError('required')">
+                Password is required.
+              </div>
+            </div>
+          </div>
+
+
+          <button type="submit" [disabled]="loginForm.invalid || formBeingSubmitted" class="btn btn-primary btn-sm">
+            <!-- Start: Loader -->
+            <span *ngIf="formBeingSubmitted" class="spinner-border spinner-border-sm" role="status"
+              aria-hidden="true"></span>
+            <span *ngIf="formBeingSubmitted" class="sr-only">Loading...</span>
+            <span> Submit</span></button>
+        </form>
+        <br>
+        <div>
+          Don't have a account yet? <a routerLink="/register">Register Here</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

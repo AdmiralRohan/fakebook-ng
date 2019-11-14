@@ -1,0 +1,55 @@
+<div id="container" class="mx-auto my-3">
+  <div class="text-center font-weight-bold mb-2">{{ friendName }}</div>
+
+  <div class="card p-3 my-2">
+    <div *ngIf="!messages.length" class="card-body text-center">
+      <span>Send HI to {{ friendName }}!</span>
+    </div>
+    <ng-container *ngIf="messages.length > 0">
+      <div class="card-title font-weight-bold text-center">{{ noOfMessages }}</div>
+      <hr>
+
+      <div class="card-body" id="message-body">
+        <ng-container *ngFor="let message of messages">
+          <div class="card-text">
+            <div>
+              <div class="card-title">
+                <span class="font-weight-bold"><a
+                    routerLink="/profile/{{ message.from.id }}">{{ message.from.name }}</a></span>
+                <div class="w-100 my-1 d-sm-none"></div>
+                <span class="float-sm-right">{{ message.time | date: 'short' }}</span>
+              </div>
+              <div class="card-text my-2 line-breaker" [innerHTML]="message.content"></div>
+            </div>
+          </div>
+          <hr>
+        </ng-container>
+      </div>
+    </ng-container>
+
+    <div class="card-footer">
+      <form #form="ngForm">
+        <div class="form-group">
+          <!-- Tooltip shown for blank content -->
+          <ng-template #blankTooltipContent>
+            Cannot submit blank comment.
+          </ng-template>
+
+          <textarea appAutoAdjustTextarea #message placement="bottom"
+            [ngbTooltip]="isBlankInputTooltipShown ? blankTooltipContent : ''" type="text"
+            class="form-control form-control-sm overflow-hidden comment-input" rows="1"
+            placeholder="Type your message..."
+            [class.is-invalid]="content.invalid && (content.dirty || content.touched)" name="messageContent"
+            [(ngModel)]="messageContent" [innerHTML]="messageContent" required (keydown)="messageSubmit($event, form)"
+            #content="ngModel"></textarea>
+
+          <div *ngIf="content.invalid && (content.dirty || content.touched)" class="invalid-feedback">
+            <div *ngIf="content.hasError('required')">
+              Cannot submit empty message.
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
