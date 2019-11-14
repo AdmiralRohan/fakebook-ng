@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { DataService } from "../../services/data.service";
 import { Component, OnInit } from "@angular/core";
 import { LikedUsersModalComponent } from "src/app/modals/liked-users-modal/liked-users-modal.component";
-import { NgbModal } from "@ng-bootstrap/ng-bootstrap/modal/modal.module";
+import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
   selector: "app-profile",
