@@ -23,11 +23,11 @@ import { LikedUsersModalComponent } from "./modals/liked-users-modal/liked-users
 import { FormControlStatusDirective } from "./directives/form-control-status/form-control-status.directive";
 import { FriendshipButtonComponent } from "./components/friendship-button/friendship-button.component";
 import { AutoAdjustTextareaDirective } from "./directives/auto-adjust-textarea/auto-adjust-textarea.directive";
-import { CreatePostFormComponent } from './components/create-post-form/create-post-form.component';
-import { FriendsComponent } from './components/friends/friends.component';
-import { FriendDetailComponent } from './components/friend-detail/friend-detail.component';
-import { InboxComponent } from './components/inbox/inbox.component';
-import { MessageComponent } from './components/message/message.component';
+import { CreatePostFormComponent } from "./components/create-post-form/create-post-form.component";
+import { FriendsComponent } from "./components/friends/friends.component";
+import { FriendDetailComponent } from "./components/friend-detail/friend-detail.component";
+import { InboxComponent } from "./components/inbox/inbox.component";
+import { MessageComponent } from "./components/message/message.component";
 
 @NgModule({
   declarations: [
@@ -61,7 +61,7 @@ import { MessageComponent } from './components/message/message.component';
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    NgbModule.forRoot()
+    NgbModule
   ],
   providers: [],
   bootstrap: [AppComponent],
