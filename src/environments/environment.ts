@@ -4,8 +4,8 @@
 
 export const environment = {
   production: false,
-  url: "https://fakebook-node-api.herokuapp.com"
-  // url: "http://localhost:8000"
+  // url: "https://fakebook-node-api.herokuapp.com"
+  url: "http://localhost:8000"
 };
 
 /*
